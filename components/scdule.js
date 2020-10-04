@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import {Calendar} from 'react-native-calendars';
 
-export default function  MyGallery(props) {
+export default function  Scdule(props) {
 
   /*constructor(props) {
     super(props);
@@ -24,11 +24,11 @@ export default function  MyGallery(props) {
 */
 
     const [day,setsDay] = useState()
+    const userId = props.navigation.getParam('userId');
 
     const Daypress = (day) =>{
       setsDay(day);
-      
-    props.navigation.navigate('Slot', { bookingDate : day })
+    props.navigation.navigate('Slot', { bookingDate : day ,userId:userId})
     }
     return (
       <View style={styles.container}>
@@ -48,7 +48,21 @@ export default function  MyGallery(props) {
       </View>
     );
   }
+  Scdule.navigationOptions = screenProps => ({
+    title : "Scdule",
+    headerStyle:{
+        backgroundColor:'orange',
 
+    },
+    headerTintColor: '#fff',
+    headerTitleStyle:{
+        fontWeight:'bold',
+        fontSize:24,
+        alignSelf: 'center',
+        justifyContent:"flex-start",    
+    },
+
+})
 
 const styles = StyleSheet.create({
   container: {

@@ -4,10 +4,11 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { getActiveChildNavigationOptions } from 'react-navigation';
 
 export default function Auth(props) {
-
+//10.0.0.16:8000
     const [username,setUser]= useState("")
     const [password,setpassword]= useState("")
     const [registerview,setregisterview]= useState(false)
+    const [token,setToken] =useState(null)
 
     useEffect(()=>{
       getData();
@@ -15,7 +16,7 @@ export default function Auth(props) {
 
     const auth = ()=>{
       if(registerview){
-        fetch(`http://10.0.0.16:8000/api/users/`, {
+        fetch(`http://10.0.0.21:8000/api/users/`, {
           method : 'POST',
           headers : {
             'Content-Type' : 'application/json'
@@ -24,14 +25,12 @@ export default function Auth(props) {
         })
         .then(resp => resp.json())
         .then(resp=>{
-          setregisterview(false);
-         console.log(resp);
-         
+          setregisterview(false);         
         })
         .catch(err => console.log(err))
       }
       else{
-        fetch(`http://10.0.0.16:8000/auth/`, {
+        fetch(`http://10.0.0.21:8000/auth/`, {
           method : 'POST',
           headers : {
             'Content-Type' : 'application/json'
@@ -41,8 +40,8 @@ export default function Auth(props) {
         .then(resp => resp.json())
         .then(resp=>{
           saveToken(resp.token);
-          props.navigation.navigate("Home",{username:username});
-         
+          props.navigation.navigate("Home",{username:username,token:token});
+  
         })
         .catch(err => console.log(err))
       }
@@ -55,10 +54,9 @@ const saveToken = async(token) =>{
 
 const getData = async () => {
 
-    const token = await AsyncStorage.getItem('MR_Token');
+  setToken(await AsyncStorage.getItem('MR_Token'));
     if(token)  {
-      console.log(token)
-      props.navigation.navigate("MovieList");
+      props.navigation.navigate("Home");
     }
 
 }
