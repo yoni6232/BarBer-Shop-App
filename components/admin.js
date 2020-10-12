@@ -24,27 +24,31 @@ const [day,setDay] = useState( new Date().getDate())
 const [month,setmonth] = useState( new Date().getMonth() + 1)
 const [year,setyear] = useState(new Date().getFullYear())
 
-useEffect(()=>{
-    fetch(`http://10.0.0.21:8000/api/appoin/`, {
-        method : 'GET',
-        headers : {
 
-        },
-      })
-      .then(resp => resp.json())
-      .then(resp=>{
-        setappointment(resp);        
-      })
-      .catch(err => Alert.alert("Error",err))
+useEffect(()=>{
+  fetch(`http://10.0.0.9:8000/api/appoin/`, {
+      method : 'GET',
+      headers : {
+        'Content-Type' : 'application/json'
+
+      },
+    })
+    .then(resp => resp.json())
+    .then(resp=>{
+      setappointment(resp);       
+    })
+    .catch(err => Alert.alert("Error",err))
 
 },[])
 
     
     const slots = jsonData.slots
-    const getCurrentDate=(y,m,d)=>{
+    const getCurrentDate=(i,y,m,d)=>{
+      console.log(y,m,d) 
 
         if(m==month&&d==day&&y==year) {
             return true; 
+
         }
         else return false
   }
@@ -55,9 +59,9 @@ useEffect(()=>{
             data = {appointment}
             renderItem = {({item}) => (
               <TouchableOpacity >
-              <View style={styles.item}>  
-                {getCurrentDate(item.year,item.month,item.day) ?  <Text style={styles.itemText} >{item.hour} </Text>: null}  
-                </View>
+             
+                {getCurrentDate(item,item.year,item.month,item.day) ?  <View style={styles.item}>   <Text style={styles.itemText} >{item.hour} </Text> </View>: null}  
+                
                 </TouchableOpacity>
             )}
             keyExtractor = {(item,index) => index.toString()}

@@ -4,6 +4,7 @@ import {
   StyleSheet,
   Text,
   View,
+  Alert,
   TouchableOpacity,
   StatusBar, Button
 } from 'react-native';
@@ -17,33 +18,34 @@ const jsonData = { "slots" : {
  }
 }
 export default function Slot(props){
-  
-const [bookingDate,setbookingDate]  =useState(props.navigation.state.params.bookingDate)
+
+const [appointment,setappointment] = useState([]);
+const [bookingDate,setbookingDate] = useState(props.navigation.state.params.bookingDate);
 const userId = props.navigation.getParam('userId');
-const [appointment,setappointment] = useState(null)
+const [chechhour,setchechhour] = useState(false)
+const slots = jsonData.slots
+
 
 useEffect(()=>{
-  fetch(`http://10.0.0.21:8000/api/appoin/`, {
+  fetch(`http://10.0.0.9:8000/api/appoin/`, {
       method : 'GET',
       headers : {
-
+        'Content-Type' : 'application/json'
       },
     })
     .then(resp => resp.json())
     .then(resp=>{
-      setappointment(resp);        
+      setappointment(resp);
     })
-    .catch(err => Alert.alert("Error",err))
-
+    .catch(err => alert("Error",err))
 },[])
-
 
   const bookSlot = (key,value) =>{
     const year = bookingDate.year
     const month = bookingDate.month
     const day = bookingDate.day
     let userDataJson = {}
-    fetch(`http://10.0.0.21:8000/api/appoin/`, {
+    fetch(`http://10.0.0.9:8000/api/appoin/`, {
         method : 'POST',
         headers : {
           'Content-Type' : 'application/json'
@@ -52,26 +54,49 @@ useEffect(()=>{
       })
       .then(resp => resp.json())
       .then(resp=>{
-        console.log(resp);         
+        if(resp.status == "200"){
+          alert("you set ap an appoinetment at : " + resp.hour);       
+
+        }
+        else {
+          alert("This line are alredy taken please choose different hour"); 
+
+        }
       })
-      .catch(err => console.log(err.response))
+      .catch(err => console.log(err))
 
   }
+  const check = () =>{
+    console.log(slots.slot1)
+     }
  
-  const checkSlot=(slots) => {
-      console.log(appointment)
-      let Names = appointment.map(function(item, index){
-        console.log(item)
+  const checkSlot=() => {
+    let hour;
+    let appointhour = appointment.map(function(item,index){
+      if(bookingDate.day == item.day && bookingDate.month == item.month){
+        return item.hour
+      }
       });
-    return true
+
+      const slotsarr1 = Object.keys(slots).map( function(k) {
+       hour = appointhour.map(function(item,index){
+          if(slots[k] == item){ console.log("");
+          }
+          else{return [k] + ": " + slots[k] + ","}
+        })
+      });
+
+      const namesArr = hour.filter(function(elem, pos) {
+        return hour.indexOf(elem) == pos;
+    }); 
+    console.log("slotsarr   " + namesArr)
+
 }
     
-    const slots = jsonData.slots
 
     const slotsarr = Object.keys(slots).map( function(k) {
-
       return (  <View key={k} style={{margin:5}}>
-                  {checkSlot(slots[k]) ? <Button  countCheck={0} onColor={"green"} effect={"pulse"} onPress={() => bookSlot(k,slots[k]) } title={slots[k]} /> : null}
+                <Button  countCheck={0} onColor={"green"} effect={"pulse"} onPress={() => bookSlot(k,slots[k]) } title={slots[k]} /> 
                 </View>)
     });
     return (

@@ -5,8 +5,8 @@ import { getActiveChildNavigationOptions } from 'react-navigation';
 
 export default function Auth(props) {
 //10.0.0.16:8000
-    const [username,setUser]= useState("")
-    const [password,setpassword]= useState("")
+    const [username,setUser]= useState()
+    const [password,setpassword]= useState()
     const [registerview,setregisterview]= useState(false)
     const [token,setToken] =useState(null)
 
@@ -16,7 +16,7 @@ export default function Auth(props) {
 
     const auth = ()=>{
       if(registerview){
-        fetch(`http://10.0.0.21:8000/api/users/`, {
+        fetch(`http://10.0.0.9:8000/api/users/`, {
           method : 'POST',
           headers : {
             'Content-Type' : 'application/json'
@@ -30,7 +30,7 @@ export default function Auth(props) {
         .catch(err => console.log(err))
       }
       else{
-        fetch(`http://10.0.0.21:8000/auth/`, {
+        fetch(`http://10.0.0.9:8000/auth/`, {
           method : 'POST',
           headers : {
             'Content-Type' : 'application/json'
@@ -39,9 +39,16 @@ export default function Auth(props) {
         })
         .then(resp => resp.json())
         .then(resp=>{
-          saveToken(resp.token);
+          console.log("sadsad" + resp.status)
+          if(resp.status!=="200")
+          {
+             alert("you have a problem eith your ID or Password")
+          }
+          else{
+          setToken(resp.token);
+          console.log(token)
           props.navigation.navigate("Home",{username:username,token:token});
-  
+          }
         })
         .catch(err => console.log(err))
       }
@@ -53,7 +60,7 @@ const saveToken = async(token) =>{
 }
 
 const getData = async () => {
-
+  console.log(username + password)
   setToken(await AsyncStorage.getItem('MR_Token'));
     if(token)  {
       props.navigation.navigate("Home");
@@ -63,8 +70,10 @@ const getData = async () => {
 
     return (
         <View style={styles.container}>
-        <Text  style={styles.label}>User Name</Text>
-        <TextInput 
+        {registerview ?  
+          <View style={styles.container}>
+         <Text  style={styles.label}>User Name</Text>
+         <TextInput 
             style={styles.input}
             placeholder = "User Name"
             onChangeText={text=> setUser(text)}
@@ -81,6 +90,42 @@ const getData = async () => {
             autoCapitalize={'none'}
 
         />
+            <Text  style={styles.label}>Phone Number</Text>
+        <TextInput 
+            style={styles.input}
+            placeholder = "Phone"
+            onChangeText={text=> setpassword(text)}
+            value={password}  
+            secureTextEntry={true}
+            autoCapitalize={'none'}
+
+        />
+        </View>
+        :  
+          <View style={styles.container}>
+         <Text  style={styles.label}>User Name</Text>
+         <TextInput 
+            style={styles.input}
+            placeholder = "User Name"
+            onChangeText={text=> setUser(text)}
+            value={username}
+            autoCapitalize={'none'}
+        />
+        <Text  style={styles.label}>Password</Text>
+        <TextInput 
+            style={styles.input}
+            placeholder = "Password"
+            onChangeText={text=> setpassword(text)}
+            value={password}
+            secureTextEntry={true}
+            autoCapitalize={'none'}
+
+        />
+        </View>
+}
+
+       
+        
         <Button onPress={()=>auth()} title= { registerview  ? "Register" : "Login"}/>
         <TouchableOpacity onPress={ () => setregisterview(!registerview)}>
         {registerview ? <Text style = {styles.viewText}>Alredy have an account ? go back to Login</Text> :
@@ -94,7 +139,7 @@ const getData = async () => {
 Auth.navigationOptions = screenProps => ({
     title : "Login",
     headerStyle:{
-        backgroundColor:'orange',
+        backgroundColor:'#7A6ADC',
 
     },
     headerTintColor: '#fff',
@@ -112,7 +157,7 @@ Auth.navigationOptions = screenProps => ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#282c35',
+    backgroundColor: '#AC3253',
     padding:10
   },
   label:{

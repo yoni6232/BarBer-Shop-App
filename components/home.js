@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React,{useEffect, useState} from 'react';
-import { Button, StyleSheet, Text, TextInput, View,Image,Alert, ImageBackground } from 'react-native';
+import { Button, StyleSheet, Text, TextInput, View,Image,Alert, ImageBackground,AsyncStorage } from 'react-native';
 
 export default function Home(props) {
     const [name,setName] = useState(props.navigation.getParam('username'))
@@ -9,7 +9,9 @@ export default function Home(props) {
     const [usersuper,setusersuper] = useState(false)
 
     useEffect(()=>{
-        fetch(`http://10.0.0.21:8000/auth/user`, {
+        
+        console.log(token)
+        fetch(`http://10.0.0.9:8000/auth/user`, {
           method : 'GET',
           headers : {
             'Content-Type' : 'application/json',
@@ -19,7 +21,6 @@ export default function Home(props) {
         .then(resp => resp.json())
         .then(resp=>{    
             console.log(resp)
-
             setUserId(resp.id)
             setusersuper(resp.is_superuser)
             console.log(resp.is_superuser)
@@ -32,19 +33,24 @@ export default function Home(props) {
     <View style={styles.home}>
         <ImageBackground style={{width:'100%' , height: '100%'}} 
             source={require('../assets/barber.png')}>
-                <Text style={styles.title} >Welcome to BarBer Shop {name} </Text>
-                <Button
+         <View style={styles.button}>
+
+                <Button 
                    onPress={()=> props.navigation.navigate("Scdule",{userId:userId})}
                     title="Set up Hair Cut"
                     color = "black"
+                    type="clear"
+
                 />
-        
+        </View>
                  <View style={styles.fixToText}>
                  <Button
+
                     onPress={()=> props.navigation.navigate("MyGallery")}
                     //onPress={()=>alert("Go to Gallery")}
                     title="Gallery"
                     color = "black"
+
                 />
                     <Button
                     onPress={()=> props.navigation.navigate("MyHaircut")}
@@ -63,7 +69,7 @@ export default function Home(props) {
                         <Button
                     title="see all appointment"
                     color = "black"
-                    onPress={()=> props.navigation.navigate("Admin")}
+                    onPress={()=> props.navigation.navigate("Login")}
                     />
                     :
                     null }
@@ -72,10 +78,11 @@ export default function Home(props) {
     
   );
 }
+
 Home.navigationOptions = screenProps => ({
     title : "BarBer Shop",
     headerStyle:{
-        backgroundColor:'orange',
+        backgroundColor:'#7A6ADC',
 
     },
     headerTintColor: '#fff',
@@ -86,8 +93,8 @@ Home.navigationOptions = screenProps => ({
         justifyContent:"flex-start",    
     },
     headerRight:() =>(
-        <View style={styles.butContainer}>
-          <Button title="Logout" style ={{'color':'red'}}
+        <View >
+          <Button title="Logout" 
               onPress={()=> removieToken(screenProps)}
           />
           </View>
@@ -95,22 +102,33 @@ Home.navigationOptions = screenProps => ({
 
 })
 const removieToken = async (props) =>{
+    console.log("sadsa")
     await AsyncStorage.removeItem('MR_Token');
     props.navigation.navigate('Auth')
   }
+
 const styles = StyleSheet.create(
 {
     home: 
     {
-        flex: 1,
+        flex: 2,
         backgroundColor: '#fff',
         alignItems: 'center',
         justifyContent: 'center',
+        display: 'flex',
+
+
     },
     title:{
-        color:'red',
+        color:'#060809',
         textAlign:'center',
         fontSize:50
+    },
+    button:{
+        marginTop:150,
+
+         alignItems: 'center',
+
     },
     name :{
         color:'green'
@@ -118,6 +136,7 @@ const styles = StyleSheet.create(
     fixToText: {
         marginVertical: 15,
         margin:80,
+        marginTop:30,
         marginLeft:15,
         marginRight:15,
 
