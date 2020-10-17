@@ -42,7 +42,7 @@ export default function Auth(props) {
           console.log("sadsad" + resp.status)
           if(resp.status!=="200")
           {
-             alert("you have a problem eith your ID or Password")
+             alert("you have a problem with your ID or Password")
           }
           else{
           setToken(resp.token);
@@ -70,8 +70,11 @@ const getData = async () => {
 
     return (
         <View style={styles.container}>
+   
         {registerview ?  
+        
           <View style={styles.container}>
+       
          <Text  style={styles.label}>User Name</Text>
          <TextInput 
             style={styles.input}
@@ -103,6 +106,8 @@ const getData = async () => {
         </View>
         :  
           <View style={styles.container}>
+          <Image style={{width: 200, height: 200 , marginLeft:100}} 
+            source={require('../assets/bbb.png')}></Image>
          <Text  style={styles.label}>User Name</Text>
          <TextInput 
             style={styles.input}
@@ -119,12 +124,10 @@ const getData = async () => {
             value={password}
             secureTextEntry={true}
             autoCapitalize={'none'}
-
         />
         </View>
 }
 
-       
         
         <Button onPress={()=>auth()} title= { registerview  ? "Register" : "Login"}/>
         <TouchableOpacity onPress={ () => setregisterview(!registerview)}>
@@ -139,7 +142,7 @@ const getData = async () => {
 Auth.navigationOptions = screenProps => ({
     title : "Login",
     headerStyle:{
-        backgroundColor:'#7A6ADC',
+        backgroundColor:'#004dcf',
 
     },
     headerTintColor: '#fff',
@@ -157,7 +160,7 @@ Auth.navigationOptions = screenProps => ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#AC3253',
+    backgroundColor: '#000000',
     padding:10
   },
   label:{

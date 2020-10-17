@@ -11,8 +11,6 @@ import { createAppContainer } from 'react-navigation';
 
   
 const AppNavigator = createStackNavigator({
-
-
   Auth : {screen:Auth},
   Home : {screen:Home},
   MyGallery :  {screen:MyGallery},

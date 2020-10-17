@@ -40,7 +40,6 @@ export default function Home(props) {
                     title="Set up Hair Cut"
                     color = "black"
                     type="clear"
-
                 />
         </View>
                  <View style={styles.fixToText}>
@@ -78,7 +77,6 @@ export default function Home(props) {
     
   );
 }
-
 Home.navigationOptions = screenProps => ({
     title : "BarBer Shop",
     headerStyle:{

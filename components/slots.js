@@ -18,7 +18,6 @@ const jsonData = { "slots" : {
  }
 }
 export default function Slot(props){
-
 const [appointment,setappointment] = useState([]);
 const [bookingDate,setbookingDate] = useState(props.navigation.state.params.bookingDate);
 const userId = props.navigation.getParam('userId');
@@ -54,6 +53,7 @@ useEffect(()=>{
       })
       .then(resp => resp.json())
       .then(resp=>{
+        console.log(resp)
         if(resp.status == "200"){
           alert("you set ap an appoinetment at : " + resp.hour);       
 
